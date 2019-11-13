@@ -12,7 +12,7 @@ basePath: /api/v1
 
 # Paths supported by the server application
 paths:
-  /api/v1/login:
+  /api/v1/auth/login:
     post:
       operationId: user.login
       tags:
@@ -34,33 +34,26 @@ paths:
                 type: string
                 description: Last name of person to create
       responses:
-        201:
+        200:
           description: Successfully created person in list
 
-  /user:
-    post:
-      operationId: user.create
+  /api/v1/auth/logout:
+    get:
+      operationId: user.logout
       tags:
-        - People
-      summary: Create a person and add it to the people list
-      description: Create a new person in the people list
+        - Authentication
+      summary: User Logout
       parameters:
-        - name: person
-          in: body
-          description: Person to create
-          required: True
-          schema:
-            type: object
-            properties:
-              fname:
-                type: string
-                description: First name of person to create
-              lname:
-                type: string
-                description: Last name of person to create
+        - in: header
+          name: Authorization
+          type: string
+          required: true
+          description: Bearer JWT Token.
       responses:
-        201:
-          description: Successfully created person in list
+        200:
+          description: Successfully logout
+        401:
+          description: Failed to logout
 
   /people/{lname}:
     get:
