@@ -48,74 +48,82 @@ paths:
           name: Authorization
           type: string
           required: true
-          description: Bearer JWT Token.
+          description: token.
       responses:
         200:
-          description: Successfully logout
+          description: Logout successfully
         401:
           description: Failed to logout
 
-  /people/{lname}:
+  /api/v1/auth/user:
     get:
-      operationId: people.read_one
+      operationId: auth.user
       tags:
-        - People
-      summary: Read one person from the people list
-      description: Read one person from the people list
+        - Authentication
+      summary: Auth user information
       parameters:
-        - name: lname
-          in: path
-          description: Last name of the person to get from the list
+        - in: header
+          name: Authorization
           type: string
-          required: True
+          required: true
+          description: token.
       responses:
         200:
-          description: Successfully read person from people list operation
+          description: Get auth user obejct
           schema:
             properties:
-              fname:
+              id:
+                type: integer
+                description: User ID
+              username:
                 type: string
-              lname:
+              email:
                 type: string
-              timestamp:
+              first_name:
+                type: string
+              last_name:
                 type: string
 
-    put:
-      operationId: people.update
+
+  /api/v1/auth/user/list:
+    get:
+      operationId: user.list
       tags:
-        - People
-      summary: Update a person in the people list
-      description: Update a person in the people list
+        - User
+      summary: Get user list
       parameters:
-        - name: lname
-          in: path
-          description: Last name of the person to update in the list
+        - in: header
+          name: Authorization
           type: string
-          required: True
-        - name: person
-          in: body
+          required: true
+          description: token.
+      responses:
+        200:
+          description: Get auth user obejct
           schema:
-            type: object
-            properties:
-              fname:
-                type: string
-              lname:
-                type: string
-      responses:
-        200:
-          description: Successfully updated person in people list
+            $ref: '#/definitions/Users'
 
-    delete:
-      operationId: people.delete
-      tags:
-        - People
-      summary: Delete a person from the people list
-      description: Delete a person
-      parameters:
-        - name: lname
-          in: path
-          type: string
-          required: True
-      responses:
-        200:
-          description: Successfully deleted a person from people list
+definitions:
+  Users:
+    type: "array"
+    items:
+      $ref: '#/definitions/AuthUser'
+
+  AuthUser:
+    type: object
+    properties:
+      id:
+        type: integer
+        example: 1
+      username:
+        type: string
+        example: 'username'
+      email:
+        type: string
+        example: 'admin@example.com'
+      first_name:
+        type: string
+        example: 'first name'
+      last_Name:
+        type: string
+        example: 'last name'
