@@ -7,4 +7,5 @@ urlpatterns = [
     path('auth/logout', LogoutView.as_view()),
     path('auth/user', AuthUserView.as_view()),
     path('auth/user/list', UserListView.as_view()),
+    path('auth/<int:id>/user', UserByIdView.as_view()),
 ]

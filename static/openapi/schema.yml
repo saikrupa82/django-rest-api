@@ -103,6 +103,49 @@ paths:
           schema:
             $ref: '#/definitions/Users'
 
+  /api/v1/auth/registration:
+    post:
+      operationId: user.create
+      tags:
+        - User
+      summary: User Create
+      description: User registration in this system
+      consumes:
+      - "application/json"
+      - "application/xml"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Pet object that needs to be added to the store"
+          required: true
+          schema:
+            $ref: '#/definitions/UserCreate'
+      responses:
+        200:
+          description: OK
+
+  /api/v1/auth/<int:id>/user:
+    get:
+      operationId: user.byId
+      tags:
+        - User
+      summary: Get user by id
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          required: true
+          description: token.
+      responses:
+        200:
+          description: Ok
+          schema:
+            $ref: '#/definitions/AuthUser'
+
+
 definitions:
   Users:
     type: "array"
@@ -127,3 +170,25 @@ definitions:
       last_Name:
         type: string
         example: 'last name'
+
+  UserCreate:
+    type: object
+    properties:
+      username:
+        type: string
+        example: username
+      email:
+        type: string
+        example: 'a@a.com'
+      password:
+        type: string
+        example: "123456"
+      first_name:
+        type: string
+        example: 'a'
+      last_name:
+        type: string
+        example: 'a'
+      is_superuser:
+        type: boolean
+        example: false
