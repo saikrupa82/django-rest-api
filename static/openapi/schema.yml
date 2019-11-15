@@ -71,18 +71,7 @@ paths:
         200:
           description: Get auth user obejct
           schema:
-            properties:
-              id:
-                type: integer
-                description: User ID
-              username:
-                type: string
-              email:
-                type: string
-              first_name:
-                type: string
-              last_name:
-                type: string
+            $ref: '#/definitions/UserById'
 
 
   /api/v1/auth/user/list:
@@ -111,11 +100,11 @@ paths:
       summary: User Create
       description: User registration in this system
       consumes:
-      - "application/json"
-      - "application/xml"
+        - "application/json"
+        - "application/xml"
       produces:
-      - "application/xml"
-      - "application/json"
+        - "application/xml"
+        - "application/json"
       parameters:
         - in: "body"
           name: "body"
@@ -143,16 +132,23 @@ paths:
         200:
           description: Ok
           schema:
-            $ref: '#/definitions/AuthUser'
-
+            $ref: '#/definitions/UserById'
+        404:
+          description: User not found
 
 definitions:
   Users:
-    type: "array"
-    items:
-      $ref: '#/definitions/AuthUser'
+    type: object
+    properties:
+      status:
+        type: string
+        example: 200
+      users:
+        type: array
+        items:
+          $ref: '#/definitions/UserList'
 
-  AuthUser:
+  UserList:
     type: object
     properties:
       id:
@@ -192,3 +188,26 @@ definitions:
       is_superuser:
         type: boolean
         example: false
+  UserById:
+    properties:
+      status:
+        type: string
+        example: 200
+      user:
+        type: object
+        properties:
+          id:
+            type: integer
+            example: 1
+          username:
+            type: string
+            example: 'username'
+          email:
+            type: string
+            example: 'admin@example.com'
+          first_name:
+            type: string
+            example: 'first name'
+          last_Name:
+            type: string
+            example: 'last name'

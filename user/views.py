@@ -51,7 +51,7 @@ class AuthUserView(APIView):
     def get(self, request):
         user = User.objects.get(pk=request.user.id)
         serializer = AuthUserSerializer(user)
-        return Response(serializer.data)
+        return Response({'user': serializer.data, 'status': status.HTTP_200_OK})
 
 
 class UserListView(APIView):
@@ -61,7 +61,7 @@ class UserListView(APIView):
     def get(self, request):
         user = User.objects.all()
         serializer = AuthUserSerializer(user, many=True)
-        return Response(serializer.data)
+        return Response({'users': serializer.data, 'status': status.HTTP_200_OK})
 
 
 class UserByIdView(APIView):
