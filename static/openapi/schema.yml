@@ -35,7 +35,33 @@ paths:
                 description: Last name of person to create
       responses:
         200:
-          description: Successfully created person in list
+          description: Successfully login
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: '200'
+              token:
+                type: string
+                example: "token"
+        403:
+          description: Invalid credentials
+          schema:
+            type: object
+            properties:
+              status:
+                type: array
+                items:
+                  type: object
+                  example: '403'
+              message :
+                type: array
+                items:
+                  type: object
+                  example: 'Unable to login with given credentials.'
+
+
 
   /api/v1/auth/logout:
     get:
@@ -100,11 +126,11 @@ paths:
       summary: User Create
       description: User registration in this system
       consumes:
-        - "application/json"
-        - "application/xml"
+      - "application/json"
+      - "application/xml"
       produces:
-        - "application/xml"
-        - "application/json"
+      - "application/xml"
+      - "application/json"
       parameters:
         - in: "body"
           name: "body"

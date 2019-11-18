@@ -20,7 +20,7 @@ class LoginView(APIView):
         user = serializer.validated_data["user"]
         django_login(request, user)
         token, created = Token.objects.get_or_create(user=user)
-        return Response({"token": token.key}, status=200)
+        return Response({"token": token.key, 'status': status.HTTP_200_OK})
 
 
 class LogoutView(APIView):

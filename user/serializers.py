@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
-from rest_framework import serializers, exceptions
+from rest_framework import serializers, exceptions, status
 from rest_framework.validators import UniqueValidator
 
 
@@ -22,7 +22,7 @@ class LoginSerializer(serializers.Serializer):
                     raise exceptions.ValidationError(msg)
             else:
                 msg = "Unable to login with given credentials."
-                raise exceptions.ValidationError(msg)
+                raise exceptions.ValidationError({'message': msg, 'status': status.HTTP_403_FORBIDDEN})
         else:
             msg = "Must provide username and password both."
             raise exceptions.ValidationError(msg)
