@@ -1,7 +1,7 @@
 import json
 
 from django.contrib.auth.models import User
-from rest_framework import status
+from rest_framework import status, exceptions
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.models import Token
 from rest_framework.parsers import JSONParser
@@ -72,12 +72,23 @@ class UserByIdView(APIView):
         try:
             return User.objects.get(id=id)
         except User.DoesNotExist as e:
-            return Response({'error': 'User object not found.', 'status': status.HTTP_404_NOT_FOUND})
+            raise exceptions.ValidationError({'error': 'User object not found.', 'status': status.HTTP_404_NOT_FOUND})
 
     def get(self, request, id=None):
         try:
             instance = self.get_object(id)
             user = UserByIdSerializer(instance)
             return Response({'user': user.data, 'status': status.HTTP_200_OK})
+        except User.DoesNotExist as e:
+            return Response({'error': 'User object not found.', 'status': status.HTTP_404_NOT_FOUND})
+
+    def delete(self, request, id=None):
+        try:
+            instance = self.get_object(id)
+            if request.user.id == instance.id:
+                return Response({'message': 'You are logged in, so you cannot delete your own details!',
+                                 'status': status.HTTP_406_NOT_ACCEPTABLE})
+            instance.delete()
+            return Response({'message': 'Deleting successfully', 'status': status.HTTP_200_OK})
         except User.DoesNotExist as e:
             return Response({'error': 'User object not found.', 'status': status.HTTP_404_NOT_FOUND})

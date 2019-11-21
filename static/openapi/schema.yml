@@ -55,7 +55,7 @@ paths:
                 items:
                   type: object
                   example: '403'
-              message :
+              message:
                 type: array
                 items:
                   type: object
@@ -126,11 +126,11 @@ paths:
       summary: User Create
       description: User registration in this system
       consumes:
-      - "application/json"
-      - "application/xml"
+        - "application/json"
+        - "application/xml"
       produces:
-      - "application/xml"
-      - "application/json"
+        - "application/xml"
+        - "application/json"
       parameters:
         - in: "body"
           name: "body"
@@ -161,6 +161,54 @@ paths:
             $ref: '#/definitions/UserById'
         404:
           description: User not found
+
+  /api/v1/auth/<int:pk>/user:
+    delete:
+      operationId: user.delete
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          required: true
+          description: token.
+      tags:
+        - User
+      summary: User Delete
+      responses:
+        200:
+          description: Ok
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: "200"
+              message:
+                type: string
+                example: "Deleting successfully"
+
+        404:
+          description: Not Found
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "User object not found."
+              status:
+                type: string
+                example: "404"
+        406:
+          description: Not accepted
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: "406"
+              message:
+                type: string
+                example: "You are logged in, so you cannot delete your own details!"
 
 definitions:
   Users:
@@ -237,3 +285,4 @@ definitions:
           last_Name:
             type: string
             example: 'last name'
+
