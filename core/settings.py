@@ -21,12 +21,12 @@ SECRET_KEY = '9h4)k33(1%8360iln%8xsi9pb1wkrcah_ksv%e&%yah$-=e-w&'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
 INSTALLED_APPS = [
-    #'django.contrib.admin',
+    # 'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -123,13 +123,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_PATH = os.path.join(BASE_DIR, 'static')
-
-STATIC_URL = '/static/'  # You may find this is already defined as such.
-
-STATICFILES_DIRS = (
-    STATIC_PATH,
-)
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_URL = STATIC_ROOT
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
