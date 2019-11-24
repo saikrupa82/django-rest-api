@@ -6,8 +6,8 @@ from django.views.generic import TemplateView
 
 urlpatterns = [
     path('', TemplateView.as_view(template_name='index.html')),
-    #path('admin/', admin.site.urls),
+    # path('admin/', admin.site.urls),
     path('api/v1/', include('user.api_urls')),
     path('api/v1/', include('employee.api_urls')),
     path('api/v1/', include('poll.api_urls')),
-] + static(settings.STATIC_URL)
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

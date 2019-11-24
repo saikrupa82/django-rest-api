@@ -1,14 +1,15 @@
 FROM python:3.7
+
 ENV PYTHONUNBUFFERED 1
+RUN mkdir -p /opt/services/djangoapp/src
 
-RUN mkdir -p code/
-COPY requirements.txt code/
+COPY requirements.txt /opt/services/djangoapp/src/
 
-RUN pip install --no-cache-dir -r code/requirements.txt
+RUN pip install -r /opt/services/djangoapp/src/requirements.txt
 
-WORKDIR /code
+WORKDIR /opt/services/djangoapp/src
 
-COPY . /code
+COPY . /opt/services/djangoapp/src
 
 RUN pip install -U pip \
                    gunicorn
