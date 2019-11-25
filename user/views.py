@@ -10,7 +10,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.contrib.auth import login as django_login
 
-from user.serializers import LoginSerializer, UserSerializer, AuthUserSerializer, UserByIdSerializer
+from user.serializers import LoginSerializer, UserSerializer, AuthUserSerializer, UserByIdSerializer, \
+    UserUpdateSerializer
 
 
 class LoginView(APIView):
@@ -59,7 +60,7 @@ class UserListView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        user = User.objects.all()
+        user = User.objects.all().order_by('first_name')
         serializer = AuthUserSerializer(user, many=True)
         return Response({'users': serializer.data, 'status': status.HTTP_200_OK})
 
@@ -90,5 +91,21 @@ class UserByIdView(APIView):
                                  'status': status.HTTP_406_NOT_ACCEPTABLE})
             instance.delete()
             return Response({'message': 'Deleting successfully', 'status': status.HTTP_200_OK})
+        except User.DoesNotExist as e:
+            return Response({'error': 'User object not found.', 'status': status.HTTP_404_NOT_FOUND})
+
+    def put(self, request, id=None):
+        try:
+            instance = self.get_object(id)
+            json_parser = JSONParser()
+            data = json_parser.parse(request)
+            serializer = UserUpdateSerializer(instance, data=data)
+            if serializer.is_valid():
+                serializer.save()
+                user = UserByIdSerializer(instance)
+                return Response(
+                    {'message': 'User profile updated successfully!', 'user': user.data, 'status': status.HTTP_200_OK})
+            return Response(
+                {'error': 'Failed to update user profile information', 'status': status.HTTP_406_NOT_ACCEPTABLE})
         except User.DoesNotExist as e:
             return Response({'error': 'User object not found.', 'status': status.HTTP_404_NOT_FOUND})
