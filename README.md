@@ -1,6 +1,6 @@
-#Django REST Application
+# Django REST Application
 
-#Project Requirements (If run with docker)
+# Project Requirements (If run with docker)
 
 1. Docker & Docker-compose
 2. Python 3.7
@@ -9,7 +9,7 @@
 # Project Setup
 1. Firstly clone the project
 
-    `https://github.com/mkawsar/django-rest-api.git`
+    `git clone https://github.com/mkawsar/django-rest-api.git`
 2. Goto the project root directory and copy the environment file following the command
     
     `cp .env.example .env`
