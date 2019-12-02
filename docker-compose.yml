@@ -20,6 +20,8 @@ services:
     volumes:
       - .:/opt/services/djangoapp/src
       - static:/opt/services/djangoapp/static
+    ports:
+      - "9000:9000"
     networks:
       - database_network
       - nginx_network
@@ -30,7 +32,7 @@ services:
   nginx:
     image: nginx:1.13
     ports:
-      - 8000:80
+      - "8101:80"
     volumes:
       - ./config/nginx/conf.d:/etc/nginx/conf.d
       - static:/opt/services/djangoapp/static
