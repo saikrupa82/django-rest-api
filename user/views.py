@@ -1,7 +1,7 @@
 import json
 
 from django.contrib.auth.models import User
-from rest_framework import status, exceptions
+from rest_framework import status, exceptions, decorators
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.models import Token
 from rest_framework.parsers import JSONParser
@@ -9,6 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.contrib.auth import login as django_login
+from .permissions import IsAdminUser
 
 from user.models import Role
 from user.serializers import LoginSerializer, UserSerializer, AuthUserSerializer, UserByIdSerializer, \
@@ -58,7 +59,7 @@ class AuthUserView(APIView):
 
 class UserListView(APIView):
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsAdminUser]
 
     def get(self, request):
         user = User.objects.all().order_by('first_name')
