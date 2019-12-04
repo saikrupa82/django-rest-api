@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from rest_framework import serializers, exceptions, status
 from rest_framework.validators import UniqueValidator
 
+from user.models import Role
+
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
@@ -45,6 +47,8 @@ class UserSerializer(serializers.ModelSerializer):
         )
         user.set_password(validated_data['password'])
         user.save()
+        role = Role(user_id=user.id, is_admin=False)
+        role.save()
         return user
 
     class Meta:
