@@ -9,7 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.contrib.auth import login as django_login
-from .permissions import IsAdminUser
+from user.permissions.permissions import IsAdminUser, IsNotAdminUser
 
 from user.models import Role
 from user.serializers import LoginSerializer, UserSerializer, AuthUserSerializer, UserByIdSerializer, \
@@ -75,26 +75,14 @@ class UserByIdView(APIView):
         try:
             return User.objects.get(id=id)
         except User.DoesNotExist as e:
-            raise exceptions.ValidationError({'error': 'User object not found.', 'status': status.HTTP_404_NOT_FOUND})
+            raise exceptions.ValidationError(
+                {'error': 'User object not found.', 'status': status.HTTP_404_NOT_FOUND})
 
     def get(self, request, id=None):
         try:
             instance = self.get_object(id)
             user = UserByIdSerializer(instance.id)
             return Response({'user': user.data, 'status': status.HTTP_200_OK})
-        except User.DoesNotExist as e:
-            return Response({'error': 'User object not found.', 'status': status.HTTP_404_NOT_FOUND})
-
-    def delete(self, request, id=None):
-        try:
-            instance = self.get_object(id)
-            role = Role.objects.filter(user_id=id).first()
-            if request.user.id == instance.id:
-                return Response({'message': 'You are logged in, so you cannot delete your own details!',
-                                 'status': status.HTTP_406_NOT_ACCEPTABLE})
-            role.delete()
-            instance.delete()
-            return Response({'message': 'Deleting successfully', 'status': status.HTTP_200_OK})
         except User.DoesNotExist as e:
             return Response({'error': 'User object not found.', 'status': status.HTTP_404_NOT_FOUND})
 
@@ -111,5 +99,30 @@ class UserByIdView(APIView):
                     {'message': 'User profile updated successfully!', 'user': user.data, 'status': status.HTTP_200_OK})
             return Response(
                 {'error': 'Failed to update user profile information', 'status': status.HTTP_406_NOT_ACCEPTABLE})
+        except User.DoesNotExist as e:
+            return Response({'error': 'User object not found.', 'status': status.HTTP_404_NOT_FOUND})
+
+
+class UserDeleteAndUpdateView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAdminUser]
+
+    def get_object(self, id):
+        try:
+            return User.objects.get(id=id)
+        except User.DoesNotExist as e:
+            raise exceptions.ValidationError(
+                {'error': 'User object not found.', 'status': status.HTTP_404_NOT_FOUND})
+
+    def delete(self, request, id=None):
+        try:
+            instance = self.get_object(id)
+            role = Role.objects.filter(user_id=id).first()
+            if request.user.id == instance.id:
+                return Response({'message': 'You are logged in, so you cannot delete your own details!',
+                                 'status': status.HTTP_406_NOT_ACCEPTABLE})
+            role.delete()
+            instance.delete()
+            return Response({'message': 'Deleting successfully', 'status': status.HTTP_200_OK})
         except User.DoesNotExist as e:
             return Response({'error': 'User object not found.', 'status': status.HTTP_404_NOT_FOUND})
