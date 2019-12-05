@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from .models import Category, SubCategory
 from rest_framework.response import Response
-from .serializers import CategorySerializers
+from .serializers import CategorySerializers, SubCategorySerializers
 from rest_framework import status, authentication, permissions, parsers
 
 
@@ -33,5 +33,21 @@ class CreateCategory(APIView):
         serializer = CategorySerializers(data=data)
         if serializer.is_valid():
             serializer.save()
-            return Response({'message': 'Category added successfully', 'category': serializer.data, 'status': status.HTTP_201_CREATED})
+            return Response({'message': 'Category added successfully', 'category': serializer.data,
+                             'status': status.HTTP_201_CREATED})
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CreateSubCategory(APIView):
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        json_parser = parsers.JSONParser()
+        data = json_parser.parse(request)
+        serializer = SubCategorySerializers(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'message': 'Sub category added successfully', 'category': serializer.data,
+                             'status': status.HTTP_201_CREATED})
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
