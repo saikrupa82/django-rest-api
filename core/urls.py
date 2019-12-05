@@ -10,4 +10,5 @@ urlpatterns = [
     path('api/v1/', include('user.api_urls')),
     path('api/v1/', include('employee.api_urls')),
     path('api/v1/', include('poll.api_urls')),
+    path('api/v1/category/', include('category.api_urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

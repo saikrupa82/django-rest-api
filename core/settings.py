@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'employee',
     'poll',
     'user',
+    'category',
     'rest_framework',
     'rest_framework.authtoken',
     'django_extensions',
