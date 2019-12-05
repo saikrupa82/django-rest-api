@@ -147,6 +147,35 @@ paths:
           description: Get auth user obejct
           schema:
             $ref: '#/definitions/Users'
+  /api/v1/category/sub-category/create:
+    post:
+      tags:
+        - Category
+      summary: Add sub category
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          required: true
+          description: token.
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              sub_category_name:
+                type: string
+                example: 'sub_category_name'
+              category_id:
+                type: integer
+                example: 1
+      responses:
+        201:
+          description: OK
+          schema:
+            $ref: '#/definitions/SubCategoryCreate'
+
 
   /api/v1/auth/registration:
     post:
@@ -171,6 +200,7 @@ paths:
       responses:
         200:
           description: OK
+
 
   /api/v1/auth/<int:id>/user:
     get:
@@ -421,3 +451,27 @@ definitions:
       category_name:
         type: string
         example: 'category_name'
+  SubCategoryCreate:
+    type: object
+    properties:
+      status:
+        type: string
+        example: 201
+      message:
+        type: string
+        example: 'Sub category added successfully'
+      category:
+        type: object
+        $ref: '#/definitions/SubCategory'
+  SubCategory:
+    type: object
+    properties:
+      id:
+        type: integer
+        example: 1
+      sub_category_name:
+        type: string
+        example: 'sub_category_name'
+      category_id:
+        type: integer
+        example: 1
