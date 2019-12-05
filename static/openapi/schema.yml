@@ -59,9 +59,6 @@ paths:
                 items:
                   type: object
                   example: 'Unable to login with given credentials.'
-
-
-
   /api/v1/auth/logout:
     get:
       operationId: user.logout
@@ -79,7 +76,6 @@ paths:
           description: Logout successfully
         401:
           description: Failed to logout
-
   /api/v1/auth/user:
     get:
       operationId: auth.user
@@ -97,6 +93,41 @@ paths:
           description: Get auth user obejct
           schema:
             $ref: '#/definitions/UserById'
+
+  /api/v1/category/list:
+    get:
+      tags:
+        - Category
+      summary: Get category list
+      description: Get category list
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/CategoryList'
+        404:
+          description: Not found
+          schema:
+            $ref: '#/definitions/404'
+  /api/v1/category/create:
+    post:
+      tags:
+        - Category
+      summary: Create Category
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          required: true
+          description: token
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/CreateCategory'
+      responses:
+        200:
+          description: OK
 
 
   /api/v1/auth/user/list:
@@ -253,16 +284,7 @@ paths:
         404:
           description: Not found
           schema:
-            type: object
-            properties:
-              status:
-                type: string
-                example: 404
-              error:
-                type: string
-                example: "User object not found."
-
-
+            $ref: '#/definitions/404'
 
 definitions:
   Users:
@@ -365,3 +387,37 @@ definitions:
       message:
         type: string
         example: "User profile updated successfully!"
+  404:
+    type: object
+    properties:
+      status:
+        type: string
+        example: 404
+      error:
+        type: string
+        example: "Object not found."
+  CategoryList:
+    type: object
+    properties:
+      status:
+        type: string
+        example: 200
+      categories:
+        type: array
+        items:
+          $ref: '#/definitions/Category'
+  Category:
+    type: object
+    properties:
+      id:
+        type: integer
+        example: 1
+      category_name:
+        type: string
+        example: 'category_name'
+  CreateCategory:
+    type: object
+    properties:
+      category_name:
+        type: string
+        example: 'category_name'
